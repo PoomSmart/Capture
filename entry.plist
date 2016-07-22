@@ -1,0 +1,10 @@
+{
+	entry = {
+		bundle = "CaptureSettings";
+		cell = PSLinkCell;
+		detail = "CapturePreferenceController";
+		icon = "Capture.png";
+		isController = 1;
+		label = "Capture";
+	};
+}
