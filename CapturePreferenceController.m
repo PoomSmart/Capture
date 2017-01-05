@@ -11,27 +11,6 @@
 
 DeclarePrefsTools()
 
-BOOL experimental()
-{
-	return YES;
-	//return [[NSFileManager defaultManager] fileExistsAtPath:@"/var/lib/dpkg/info/org.thebigboss.capture"];
-}
-#define CRACK !experimental()
-
-NSString *normalized(NSString *self)
-{
-	if (!CRACK)
-		return self;
-	if (self == nil)
-		return @"";
-	NSMutableString *reversedStr;
-	int len = self.length;
-	reversedStr = [NSMutableString stringWithCapacity:len];
-	while (len > 0)
-		[reversedStr appendString:[NSString stringWithFormat:@"%C", [self characterAtIndex:--len]]];
-	return reversedStr;
-}
-
 #import <PreferencesUI/PSUIPrefsRootController.h>
 
 @implementation PSUIPrefsRootController (Hack)
@@ -79,26 +58,10 @@ NSString *normalized(NSString *self)
 	return @"Capture";
 }
 
-- (NSArray *)specifiers
-{
-	NSArray *specs = [super specifiers];
-	if (!CRACK)
-		return specs;
-	NSMutableArray <PSSpecifier *> *mspecs = [specs mutableCopy];
-	[mspecs[0] setProperty:@"**Crack my DRM and I will give you a free copy**" forKey:@"footerText"];
-	[mspecs[0] setProperty:@1 forKey:@"footerAlignment"];
-	[mspecs[2] setProperty:@"Automatically inject DRM checking at runtime" forKey:@"footerText"];
-	[mspecs[4] setProperty:@"Enable DRM without any prompt" forKey:@"footerText"];
-	[mspecs[6] setProperty:@"I find it fun" forKey:@"footerText"];
-	specs = mspecs.copy;
-	[mspecs release];
-	return specs;
-}
-
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-	self.navigationItem.title = !CRACK ? tweakName : @"#TeamPirated";
+	self.navigationItem.title = tweakName;
 }
 
 - (void)loadView
@@ -106,7 +69,7 @@ NSString *normalized(NSString *self)
 	[super loadView];
 	UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 100)];
 	UILabel *tweakLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 16, 320, 50)];
-	tweakLabel.text = !CRACK ? tweakName : @"Crapture";
+	tweakLabel.text = tweakName;
 	tweakLabel.textColor = UIColor.systemBlueColor;
 	tweakLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:50.0];
 	tweakLabel.textAlignment = 1;
@@ -114,39 +77,13 @@ NSString *normalized(NSString *self)
 	[headerView addSubview:tweakLabel];
 	[tweakLabel release];
 	UILabel *dev = [[UILabel alloc] initWithFrame:CGRectMake(0, 75, 320, 14)];
-	dev.text = !CRACK ? @"By PoomSmart" : @"PoomSmart hates you";
+	dev.text = @"By PoomSmart";
 	dev.alpha = 0.8;
 	dev.font = [UIFont systemFontOfSize:14.0];
 	dev.textAlignment = 1;
 	dev.autoresizingMask = 0xa;
 	[headerView addSubview:dev];
 	[dev release];
-	if (CRACK) {
-		UILabel *p1 = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 80, 15)];
-		p1.text = @"Pirated?";
-		p1.textColor = UIColor.systemRedColor;
-		p1.font = [UIFont systemFontOfSize:12.0];
-		[headerView addSubview:p1];
-		[p1 release];
-		UILabel *p2 = [[UILabel alloc] initWithFrame:CGRectMake(280, 36, 80, 15)];
-		p2.text = @"¯\\_(ツ)_/¯";
-		p2.textColor = UIColor.systemRedColor;
-		p2.font = [UIFont boldSystemFontOfSize:12.0];
-		[headerView addSubview:p2];
-		[p2 release];
-		UILabel *p3 = [[UILabel alloc] initWithFrame:CGRectMake(45, 45, 80, 15)];
-		p3.text = @"¯\\_(ツ)_/¯";
-		p3.textColor = UIColor.systemRedColor;
-		p3.font = [UIFont boldSystemFontOfSize:12.0];
-		[headerView addSubview:p3];
-		[p3 release];
-		UILabel *p4 = [[UILabel alloc] initWithFrame:CGRectMake(240, 62, 80, 15)];
-		p4.text = @"¯\\_(ツ)_/¯";
-		p4.textColor = UIColor.systemRedColor;
-		p4.font = [UIFont boldSystemFontOfSize:12.0];
-		[headerView addSubview:p4];
-		[p4 release];
-	}	
 	self.table.tableHeaderView = headerView;
 	[headerView release];
 }
@@ -158,7 +95,7 @@ NSString *normalized(NSString *self)
 		appearanceSettings.tintColor = UIColor.systemBlueColor;
 		appearanceSettings.tableViewCellTextColor = UIColor.systemBlueColor;
 		self.hb_appearanceSettings = appearanceSettings;
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:(!CRACK ? @"💙" : @"💔") style:UIBarButtonItemStylePlain target:self action:@selector(love)] autorelease];
+		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"💙" style:UIBarButtonItemStylePlain target:self action:@selector(love)] autorelease];
 	}
 	return self;
 }
@@ -166,7 +103,7 @@ NSString *normalized(NSString *self)
 - (void)love
 {
 	SLComposeViewController *twitter = [[SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter] retain];
-	twitter.initialText = !CRACK ? @"#Capture by @PoomSmart is really awesome!" : @"#Capture by @PoomSmart is really awesome, even more if I didn't pirate it.";
+	twitter.initialText = @"#Capture by @PoomSmart is really awesome!";
 	[self.realNavigationController presentViewController:twitter animated:YES completion:nil];
 	[twitter release];
 }
@@ -190,13 +127,13 @@ NSString *normalized(NSString *self)
 
 - (NSString *)title
 {
-	return normalized(@"Phrases");
+	return @"Phrases";
 }
 
 - (id)init
 {
 	if (self == [super init])
-		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:normalized(@"Reset") style:UIBarButtonItemStylePlain target:self action:@selector(reset)] autorelease];
+		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Reset" style:UIBarButtonItemStylePlain target:self action:@selector(reset)] autorelease];
 	return self;
 }
 
@@ -207,7 +144,7 @@ NSString *normalized(NSString *self)
 		UIWindow *window = UIApplication.sharedApplication.windows[0];
 		if (self->_originalTintColor == nil)
 			self->_originalTintColor = [window.tintColor retain];
-		window.tintColor = !CRACK ? UIColor.systemOrangeColor : UIColor.systemRedColor;
+		window.tintColor = UIColor.systemOrangeColor;
 	}
 }
 
@@ -276,7 +213,7 @@ NSString *normalized(NSString *self)
 		case 3: str = @"Capture Video"; break;
 		case 4: str = @"Stop Listening";
 	}
-	return normalized(str);
+	return str;
 }
 
 - (NSString *)categoryForKey:(NSInteger)section
@@ -357,7 +294,7 @@ NSString *normalized(NSString *self)
 	if ([self isOfLastIndex:indexPath]) {
 		cellName = [NSString stringWithFormat:@"edit%ld-%ld", (long)indexPath.section, (long)indexPath.row];
 		cell = [tableView dequeueReusableCellWithIdentifier:cellName] ?: [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellName] autorelease];
-		cell.textLabel.text = !CRACK ? @"Add" : @"อิอิ";
+		cell.textLabel.text = @"Add";
 		cell.textLabel.textColor = UIColor.whiteColor;
 		cell.textLabel.textAlignment = NSTextAlignmentCenter;
 		cell.contentView.backgroundColor = UIColor.systemYellowColor;
@@ -365,7 +302,7 @@ NSString *normalized(NSString *self)
 	}
 	cellName = [NSString stringWithFormat:@"cell%ld-%ld", (long)indexPath.section, (long)indexPath.row];
 	cell = [tableView dequeueReusableCellWithIdentifier:cellName] ?: [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellName] autorelease];
-	cell.textLabel.text = !CRACK ? [self phraseForIndexPath:indexPath] : [NSString stringWithFormat:@"%@ ¯\\_(ツ)_/¯", normalized([self phraseForIndexPath:indexPath])];
+	cell.textLabel.text = [self phraseForIndexPath:indexPath];
 	cell.textLabel.textColor = UIColor.orangeColor;
 	return cell;
 }
@@ -423,7 +360,7 @@ NSString *normalized(NSString *self)
 			[self addPhrase:phrase forIndexPath:indexPath];
 		else
 			[self setPhrase:phrase forIndexPath:indexPath];
-		
+
 	}];
 	if (!isAddButton) {
 		[alertController _addActionWithTitle:@"Delete" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
@@ -456,7 +393,7 @@ NSString *normalized(NSString *self)
 
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:(!CRACK ? @"Delete" : @"¯\\_(ツ)_/¯") handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+	UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive title:@"Delete" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
 		[tableView setEditing:NO animated:YES];
 		[self removePhrase:[self phraseForIndexPath:indexPath] forIndexPath:indexPath];
 	}];
