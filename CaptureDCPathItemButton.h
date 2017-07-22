@@ -34,7 +34,7 @@
 /*!
  *  The object that acts as the delegate of the `DCPathItemButton` object.
  */
-@property (retain, nonatomic) id<DCPathItemButtonDelegate> delegate;
+@property (retain, nonatomic) id <DCPathItemButtonDelegate> delegate;
 
 /*!
  *  Creates a `DCPathItemButton` with normal and highlighted foreground and background images of the button.
@@ -46,9 +46,9 @@
  *
  *  @return A `DCPathItemButton` object.
  */
-- (instancetype)initWithImage:(UIImage *)image
-             highlightedImage:(UIImage *)highlightedImage
-              backgroundImage:(UIImage *)backgroundImage
-   backgroundHighlightedImage:(UIImage *)backgroundHighlightedImage;
+- (instancetype) initWithImage:(UIImage *)image
+              highlightedImage:(UIImage *)highlightedImage
+               backgroundImage:(UIImage *)backgroundImage
+    backgroundHighlightedImage:(UIImage *)backgroundHighlightedImage;
 
 @end

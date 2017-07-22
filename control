@@ -1,8 +1,9 @@
-Package: org.thebigboss.capture
+Package: com.ps.capture
 Name: Capture
-Depends: mobilesubstrate, preferenceloader, firmware (>= 9.0), gsc.dictation, com.rpetrich.rocketbootstrap (>= 1.0.2), ws.hbang.common (>= 1.2), cc.tweak.libobjcipc
-Version: 1.0
+Depends: mobilesubstrate, preferenceloader, firmware (>= 8.0), gsc.dictation, com.rpetrich.rocketbootstrap (>= 1.0.2), ws.hbang.common (>= 1.2), cc.tweak.libobjcipc
+Version: 0.0.1
 Architecture: iphoneos-arm
 Description: Take photos or videos just by saying a word.
 Author: PoomSmart
 Section: Tweaks
+Depiction: https://poomsmart.github.io/repo/capture/index.html

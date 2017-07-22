@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "Restarting assistantd..."
+launchctl kickstart -k system/com.apple.assistantd

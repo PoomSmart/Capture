@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
 @interface CaptureSBClient : NSObject
-+ (CaptureSBClient *)client;
++ (instancetype)client;
 - (void)handleMessageNamed:(NSString *)name withUserInfo:(NSDictionary *)userInfo;
 @end

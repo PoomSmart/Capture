@@ -16,7 +16,7 @@
 /*!
  *  The direction of a `DCPathButton` object's bloom animation.
  */
-typedef NS_ENUM(NSUInteger, kDCPathButtonBloomDirection) {
+typedef NS_ENUM (NSUInteger, kDCPathButtonBloomDirection) {
     /*!
      *  Bloom animation gose to the top of the `DCPathButton` object.
      */
@@ -150,10 +150,10 @@ typedef NS_ENUM(NSUInteger, kDCPathButtonBloomDirection) {
  */
 - (instancetype)initWithCenterImage:(UIImage *)centerImage
                    highlightedImage:(UIImage *)centerHighlightedImage;
-                   
+
 - (instancetype)initWithCenterImage:(UIImage *)centerImage
                    highlightedImage:(UIImage *)centerHighlightedImage
-                   scale:(CGFloat)scale;
+                              scale:(CGFloat)scale;
 
 /*!
  *  Creates a `DCPathButton` object with a given frame, normal and highlighted images for its center button.
@@ -167,11 +167,11 @@ typedef NS_ENUM(NSUInteger, kDCPathButtonBloomDirection) {
 - (instancetype)initWithButtonFrame:(CGRect)centerButtonFrame
                         centerImage:(UIImage *)centerImage
                    highlightedImage:(UIImage *)centerHighlightedImage;
-                   
+
 - (instancetype)initWithButtonFrame:(CGRect)centerButtonFrame
                         centerImage:(UIImage *)centerImage
                    highlightedImage:(UIImage *)centerHighlightedImage
-                   scale:(CGFloat)scale;
+                              scale:(CGFloat)scale;
 
 /*!
  *  Adds item buttons to an existing `DCPathButton` object.

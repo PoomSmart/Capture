@@ -6,7 +6,7 @@
 @end
 
 @interface AFDictationConnection : NSObject {
-	id <AFDictationDelegate> _delegate;
+    id <AFDictationDelegate> _delegate;
 }
 @property(retain, nonatomic) id <AFDictationDelegate> delegate;
 @end
@@ -73,7 +73,7 @@
 @end
 
 @interface AFDictationConnectionServiceDelegate : NSObject {
-	AFDictationConnection *_connection;
+    AFDictationConnection *_connection;
 }
 @end
 
@@ -82,7 +82,7 @@
 @end
 
 @interface ADDictationConnection : NSObject <ADCommandCenterSpeechDelegate> {
-	AFDictationConnectionServiceDelegate *_serviceDelegate;
+    AFDictationConnectionServiceDelegate *_serviceDelegate;
 }
 @end
 
