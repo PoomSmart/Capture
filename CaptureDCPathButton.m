@@ -15,8 +15,8 @@
 
 #pragma mark - Private Property
 
-@property (strong, nonatomic) NSMutableArray *itemButtonImages;
-@property (strong, nonatomic) NSMutableArray *itemButtonHighlightedImages;
+@property (strong, nonatomic) NSMutableArray <CaptureDCPathItemButton *> *itemButtonImages;
+@property (strong, nonatomic) NSMutableArray <UIImage *> *itemButtonHighlightedImages;
 
 @property (strong, nonatomic) UIImage *centerImage;
 @property (strong, nonatomic) UIImage *centerHighlightedImage;
@@ -536,7 +536,7 @@
 
 #pragma mark - Add PathButton Item
 
-- (void)addPathItems:(NSArray *)pathItemButtons {
+- (void)addPathItems:(NSArray <CaptureDCPathItemButton *> *)pathItemButtons {
     [self.itemButtons addObjectsFromArray:pathItemButtons];
 }
 

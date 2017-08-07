@@ -1,4 +1,5 @@
 #import "Header.h"
+#import "PID.h"
 #import "CaptureSBClient.h"
 #import "CapturePhraseAnalyzer.h"
 #import "Identifiers.h"
@@ -187,7 +188,7 @@ static void checkPhrase(NSString *text) {
     %orig;
 }
 
-- (void)setupForDictationStartForReason:(int)reason {
+- (void)setupForDictationStartForReason:(NSInteger)reason {
     %orig;
     if (pendingLanguage && cameraReady()) {
         self.language = pendingLanguage;
@@ -486,7 +487,7 @@ void languageDictation() {
 
 %end
 
-%group Camera9
+%group Camera9Up
 
 %hook CAMViewfinderView
 
@@ -606,16 +607,6 @@ void languageDictation() {
     }
 }
 
-- (void)_willChangeFromMode:(NSInteger)fromMode toMode:(NSInteger)toMode fromDevice:(NSInteger)fromDevice toDevice:(NSInteger)toDevice animated:(BOOL)animated {
-    if (autoStart) {
-        if (fromMode != toMode || fromDevice != toDevice) {
-            if (dictationEverStarted)
-                startDictation(NO);
-        }
-    }
-    %orig;
-}
-
 - (void)captureControllerDidStopRunning:(id)arg1 {
     startDictation(NO);
     %orig;
@@ -646,14 +637,47 @@ extern "C" NSString *CAMModeAndDeviceCommandModeWithOptions;
 
 %end
 
+%hook CAMViewfinderViewController
+
+%group Camera10
+
+- (void)_willChangeToGraphConfiguration: (CAMCaptureGraphConfiguration *)to fromGraphConfiguration: (CAMCaptureGraphConfiguration *)from animated: (BOOL)animated {
+    if (autoStart) {
+        if (from.mode != to.mode || from.device != to.device) {
+            if (dictationEverStarted)
+                startDictation(NO);
+        }
+    }
+    %orig;
+}
+
+%end
+
+%group Camera9
+
+- (void)_willChangeFromMode: (NSInteger)fromMode toMode: (NSInteger)toMode fromDevice: (NSInteger)fromDevice toDevice: (NSInteger)toDevice animated: (BOOL)animated {
+    if (autoStart) {
+        if (fromMode != toMode || fromDevice != toDevice) {
+            if (dictationEverStarted)
+                startDictation(NO);
+        }
+    }
+    %orig;
+}
+
+%end
+
+%end
+
+
+
 %group assistantd
 
 /*#ifdef MUTE
 
    %hook ADCommandCenter
 
-   - (id)init
-   {
+   - (id)init {
         self = %orig;
         HBLogDebug(@"Capture: Register notifications for ADSpeechManager");
         registerCP(center_toassistantd, send_toassistantd, [self _speechManager]);
@@ -665,8 +689,7 @@ extern "C" NSString *CAMModeAndDeviceCommandModeWithOptions;
    %hook ADSpeechManager
 
    %new
-   - (void)handleMessageNamed:(NSString *)name withUserInfo:(NSDictionary *)userInfo
-   {
+   - (void)handleMessageNamed:(NSString *)name withUserInfo:(NSDictionary *)userInfo {
         HBLogDebug(@"TTTT");
         if (![name isEqualToString:send_toassistantd])
                 return;
@@ -679,8 +702,7 @@ extern "C" NSString *CAMModeAndDeviceCommandModeWithOptions;
    }
 
    %new
-   - (void)capture_mute:(id)arg1
-   {
+   - (void)capture_mute:(id)arg1 {
         HBLogDebug(@"Capture: mute microphone activation sound");
         [[[self _speechRecorder] _voiceController] setAlertSoundFromURL:nil forType:1];
         [[[self _speechRecorder] _voiceController] setAlertSoundFromURL:nil forType:2];
@@ -688,8 +710,7 @@ extern "C" NSString *CAMModeAndDeviceCommandModeWithOptions;
    }
 
    %new
-   - (void)capture_unmute:(id)arg1
-   {
+   - (void)capture_unmute:(id)arg1 {
         HBLogDebug(@"Capture: unmute microphone activation sound");
         MSHookIvar<BOOL>([[self _speechRecorder] _voiceController], "_needsAlertsSet") = YES;
         [[self _speechRecorder] _setAlertsIfNeeded];
@@ -701,8 +722,7 @@ extern "C" NSString *CAMModeAndDeviceCommandModeWithOptions;
 
 %hook ADSpeechRecorder
 
-- (void)_playAudioAlert: (int)type
-{
+- (void)_playAudioAlert: (int)type {
     %log;
     %orig;
 }
@@ -710,7 +730,7 @@ extern "C" NSString *CAMModeAndDeviceCommandModeWithOptions;
 %end
 
 void sendResult(ADCommandCenter *center, SASSpeechPartialResult *result) {
-    if (result.tokens.count > 0) {
+    if (result.tokens.count) {
         SASToken *token = (SASToken *)(result.tokens.lastObject);
         HBLogDebug(@"Capture: sending result from assistantd (saying \"%@\")", token.text);
         sendCPMessage(center_assistantd, send_assistantd, @{ sendPartialResultKey : token.text });
@@ -751,6 +771,20 @@ void sendResult(ADCommandCenter *center, SASSpeechPartialResult *result) {
 
 %end
 
+%group assertiond
+
+%hook BKProcessAssertionServer
+
+- (BOOL)_queue_assertionAllowedForProcess: (id)process withConnection: (id)arg2 fromPID: (int)pid reason: (unsigned)arg4 outServiceHost: (id *)arg5  {
+    if (pid && pid == PIDForProcessNamed(@"assistantd"))
+        return YES;
+    return %orig;
+}
+
+%end
+
+%end
+
 HaveCallback() {
     GetPrefs()
     GetBool2(tweakEnabled, YES)
@@ -776,6 +810,8 @@ HaveCallback() {
                 HBLogDebug(@"Capture: init for %@", processName);
                 if ([processName isEqualToString:@"assistantd"]) {
                     %init(assistantd);
+                } else if ([processName isEqualToString:@"assertiond"]) {
+                    %init(assertiond);
                 } else {
                     dlopen("/System/Library/PrivateFrameworks/AssistantServices.framework/AssistantServices", RTLD_LAZY);
                     if ([processName isEqualToString:@"SpringBoard"]) {
@@ -800,7 +836,12 @@ HaveCallback() {
                         callback();
                         if (isiOS9Up) {
                             openCamera9();
-                            %init(Camera9);
+                            if (isiOS10Up) {
+                                %init(Camera10);
+                            } else {
+                                %init(Camera9);
+                            }
+                            %init(Camera9Up);
                         } else if (isiOS8) {
                             openCamera8();
                             %init(Camera8);

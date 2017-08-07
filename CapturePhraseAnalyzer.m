@@ -49,7 +49,7 @@
     [NSNotificationCenter.defaultCenter postNotificationName:name object:nil];
 }
 
-- (BOOL)containPhrase:(NSArray *)_phrases forString:(NSString *)_phrase {
+- (BOOL)containPhrase:(NSArray <NSString *> *)_phrases forString:(NSString *)_phrase {
     for (NSString *check in _phrases) {
         if ([_phrase hasSuffix:check])
             return YES;

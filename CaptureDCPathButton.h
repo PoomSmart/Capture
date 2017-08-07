@@ -178,11 +178,11 @@ typedef NS_ENUM (NSUInteger, kDCPathButtonBloomDirection) {
  *
  *  @param pathItemButtons The item buttons to be added.
  */
-- (void)addPathItems:(NSArray *)pathItemButtons;
+- (void)addPathItems:(NSArray <CaptureDCPathItemButton *> *)pathItemButtons;
 
 - (void)applyColor:(UIColor *)color;
 
-@property (strong, nonatomic) NSMutableArray *itemButtons;
+@property (strong, nonatomic) NSMutableArray <CaptureDCPathItemButton *> *itemButtons;
 @property (assign, nonatomic) CGFloat scale;
 
 @end

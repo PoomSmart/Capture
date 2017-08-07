@@ -2,22 +2,22 @@
 #import "../PS.h"
 
 @interface CapturePhraseAnalyzer : NSObject {
-    NSMutableArray *phrases;
+    NSMutableArray <NSString *> *phrases;
     NSMutableString *currentPhrase;
-    NSArray *takePhotoPhrases;
-    NSArray *burstPhrases;
-    NSArray *stopBurstPhrases;
-    NSArray *captureVideoPhrases;
-    NSArray *stopPhrases;
+    NSArray <NSString *> *takePhotoPhrases;
+    NSArray <NSString *> *burstPhrases;
+    NSArray <NSString *> *stopBurstPhrases;
+    NSArray <NSString *> *captureVideoPhrases;
+    NSArray <NSString *> *stopPhrases;
     CAMViewfinderViewController *vc;
 }
-@property(retain, nonatomic) NSMutableArray *phrases;
+@property(retain, nonatomic) NSMutableArray <NSString *> *phrases;
 @property(retain, nonatomic) NSMutableString *currentPhrase;
-@property(retain, nonatomic) NSArray *takePhotoPhrases;
-@property(retain, nonatomic) NSArray *burstPhrases;
-@property(retain, nonatomic) NSArray *stopBurstPhrases;
-@property(retain, nonatomic) NSArray *captureVideoPhrases;
-@property(retain, nonatomic) NSArray *stopPhrases;
+@property(retain, nonatomic) NSArray <NSString *> *takePhotoPhrases;
+@property(retain, nonatomic) NSArray <NSString *> *burstPhrases;
+@property(retain, nonatomic) NSArray <NSString *> *stopBurstPhrases;
+@property(retain, nonatomic) NSArray <NSString *> *captureVideoPhrases;
+@property(retain, nonatomic) NSArray <NSString *> *stopPhrases;
 @property(retain, nonatomic) CAMViewfinderViewController *vc;
 + (instancetype)analyzer;
 - (void)computeMultiple;
