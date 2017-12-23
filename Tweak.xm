@@ -21,16 +21,9 @@
 #define isPhotoMode(mode) (mode == 0 || mode == 4)
 #define FS 1
 
-NSObject <cameraControllerDelegate> *cont() {
+id cont() {
     return (CAMCaptureController *)[objc_getClass("CAMCaptureController") sharedInstance];
 }
-
-/*BOOL isCameraRunning() {
-        BKSSystemService *systemService = [[BKSSystemService alloc] init];
-        pid_t pid = [systemService pidForApplication:@"com.apple.camera"];
-        [systemService release];
-        return pid != 0;
-   }*/
 
 BOOL tweakEnabled;
 BOOL autoStart;
@@ -614,9 +607,6 @@ void languageDictation() {
 
 %end
 
-extern "C" NSString *CAMModeAndDeviceCommandDevice;
-extern "C" NSString *CAMModeAndDeviceCommandModeWithOptions;
-
 %hook CUCaptureController
 
 - (void)_handleCaptureEngineExecutionNotification: (NSNotification *)notification {
@@ -625,7 +615,7 @@ extern "C" NSString *CAMModeAndDeviceCommandModeWithOptions;
     if (autoStart) {
         @autoreleasepool {
             NSDictionary *userInfo = notification.userInfo;
-            if (userInfo[CAMModeAndDeviceCommandDevice] && userInfo[CAMModeAndDeviceCommandModeWithOptions]) {
+            if ((isiOS10Up && userInfo[@"CAMModeAndDeviceCommandDesiredConfiguration"]) || (userInfo[@"CAMModeAndDeviceCommandDevice"] && userInfo[@"CAMModeAndDeviceCommandModeWithOptions"])) {
                 shouldDetect = YES;
                 startDictation(YES);
             }

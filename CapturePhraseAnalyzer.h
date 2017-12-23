@@ -1,5 +1,5 @@
 #define UIFUNCTIONS_NOT_C
-#import "../PS.h"
+#import "Header.h"
 
 @interface CapturePhraseAnalyzer : NSObject {
     NSMutableArray <NSString *> *phrases;

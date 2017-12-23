@@ -1,3 +1,4 @@
+#define UNRESTRICTED_AVAILABILITY
 #import "../PS.h"
 #import <Preferences/PSListController.h>
 

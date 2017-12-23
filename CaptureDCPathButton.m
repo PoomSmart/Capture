@@ -529,7 +529,7 @@
     CAAnimationGroup *animations = [CAAnimationGroup animation];
     animations.animations = (self.allowSubItemRotation ? @[movingAnimation, rotationAnimation] : @[movingAnimation]);
     animations.duration = self.basicDuration;
-    animations.delegate = self;
+    animations.delegate = (id)self;
 
     return animations;
 }
